@@ -79,3 +79,11 @@ dotnet test
 ## 📝 Site Under Test
 
 [The Internet - Herokuapp](https://the-internet.herokuapp.com/)
+
+---
+
+## 📊 Allure Test Report
+
+Live report published automatically on every push:
+
+👉 [View Allure Report](https://lizethheredia.github.io/CSharpSeleniumQA/)
