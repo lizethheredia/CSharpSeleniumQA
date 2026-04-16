@@ -7,19 +7,27 @@ using OpenQA.Selenium;
 
 namespace CSharpSeleniumQA.Tests
 {
-    [TestFixture]
+    [TestFixture(BrowserType.Chrome)]
+    [TestFixture(BrowserType.Firefox)]
     [AllureNUnit]
     [AllureSuite("Login")]
+    [Parallelizable(ParallelScope.Fixtures)]
     public class LoginTests
     {
+        private readonly BrowserType _browser;
         private IWebDriver _driver;
         private LoginPage _loginPage;
+
+        public LoginTests(BrowserType browser)
+        {
+            _browser = browser;
+        }
 
         [SetUp]
         public void SetUp()
         {
             _driver = DriverFactory.CreateDriver(
-                browser: ConfigManager.Browser,
+                browser: _browser,
                 headless: ConfigManager.Headless
             );
             _loginPage = new LoginPage(_driver);
