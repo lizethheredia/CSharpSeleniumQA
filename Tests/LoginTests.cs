@@ -2,7 +2,6 @@ using Allure.NUnit;
 using Allure.NUnit.Attributes;
 using CSharpSeleniumQA.Drivers;
 using CSharpSeleniumQA.Pages;
-using NUnit.Framework;
 using OpenQA.Selenium;
 
 namespace CSharpSeleniumQA.Tests
@@ -37,6 +36,13 @@ namespace CSharpSeleniumQA.Tests
         [TearDown]
         public void TearDown()
         {
+            if (
+                TestContext.CurrentContext.Result.Outcome.Status
+                == NUnit.Framework.Interfaces.TestStatus.Failed
+            )
+            {
+                ScreenshotHelper.TakeScreenshot(_driver, TestContext.CurrentContext.Test.Name);
+            }
             _driver.Quit();
             _driver.Dispose();
         }
@@ -45,22 +51,14 @@ namespace CSharpSeleniumQA.Tests
         public void Login_WithValidCredentials_ShouldSucceed()
         {
             _loginPage.Login(ConfigManager.ValidUsername, ConfigManager.ValidPassword);
-            Assert.That(
-                _loginPage.IsLoginSuccessful(),
-                Is.True,
-                "El login válido debería ser exitoso"
-            );
+            Assert.That(_loginPage.IsLoginSuccessful(), Is.True, "Valid login should succeed");
         }
 
         [Test]
         public void Login_WithInvalidCredentials_ShouldFail()
         {
             _loginPage.Login(ConfigManager.InvalidUsername, ConfigManager.InvalidPassword);
-            Assert.That(
-                _loginPage.IsLoginFailed(),
-                Is.True,
-                "El login inválido debería mostrar error"
-            );
+            Assert.That(_loginPage.IsLoginFailed(), Is.True, "Invalid login should show error");
         }
     }
 }

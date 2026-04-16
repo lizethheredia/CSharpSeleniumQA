@@ -2,7 +2,6 @@ using Allure.NUnit;
 using Allure.NUnit.Attributes;
 using CSharpSeleniumQA.Drivers;
 using CSharpSeleniumQA.Pages;
-using NUnit.Framework;
 using OpenQA.Selenium;
 
 namespace CSharpSeleniumQA.Tests
@@ -29,6 +28,13 @@ namespace CSharpSeleniumQA.Tests
         [TearDown]
         public void TearDown()
         {
+            if (
+                TestContext.CurrentContext.Result.Outcome.Status
+                == NUnit.Framework.Interfaces.TestStatus.Failed
+            )
+            {
+                ScreenshotHelper.TakeScreenshot(_driver, TestContext.CurrentContext.Test.Name);
+            }
             _driver.Quit();
             _driver.Dispose();
         }
@@ -37,14 +43,22 @@ namespace CSharpSeleniumQA.Tests
         public void Dropdown_SelectOption1_ShouldBeSelected()
         {
             _dropdownPage.SelectByValue("1");
-            Assert.That(_dropdownPage.GetSelectedOption(), Is.EqualTo("Option 1"));
+            Assert.That(
+                _dropdownPage.GetSelectedOption(),
+                Is.EqualTo("Option 1"),
+                "Option 1 should be selected"
+            );
         }
 
         [Test]
         public void Dropdown_SelectOption2_ShouldBeSelected()
         {
             _dropdownPage.SelectByText("Option 2");
-            Assert.That(_dropdownPage.GetSelectedOption(), Is.EqualTo("Option 2"));
+            Assert.That(
+                _dropdownPage.GetSelectedOption(),
+                Is.EqualTo("Option 2"),
+                "Option 2 should be selected"
+            );
         }
     }
 }

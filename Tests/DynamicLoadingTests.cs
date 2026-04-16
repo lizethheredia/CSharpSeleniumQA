@@ -2,7 +2,6 @@ using Allure.NUnit;
 using Allure.NUnit.Attributes;
 using CSharpSeleniumQA.Drivers;
 using CSharpSeleniumQA.Pages;
-using NUnit.Framework;
 using OpenQA.Selenium;
 
 namespace CSharpSeleniumQA.Tests
@@ -29,6 +28,13 @@ namespace CSharpSeleniumQA.Tests
         [TearDown]
         public void TearDown()
         {
+            if (
+                TestContext.CurrentContext.Result.Outcome.Status
+                == NUnit.Framework.Interfaces.TestStatus.Failed
+            )
+            {
+                ScreenshotHelper.TakeScreenshot(_driver, TestContext.CurrentContext.Test.Name);
+            }
             _driver.Quit();
             _driver.Dispose();
         }
@@ -38,7 +44,7 @@ namespace CSharpSeleniumQA.Tests
         {
             _dynamicLoadingPage.ClickStart();
             var result = _dynamicLoadingPage.WaitForResult();
-            Assert.That(result, Is.EqualTo("Hello World!"));
+            Assert.That(result, Is.EqualTo("Hello World!"), "Element should appear after loading");
         }
     }
 }
