@@ -2,4 +2,4 @@ appsettings.local.json
 bin/
 obj/
 *.user
-.DS_Store
+.DS_Storeallure-report/
