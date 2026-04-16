@@ -87,3 +87,25 @@ dotnet test
 Live report published automatically on every push:
 
 👉 [View Allure Report](https://lizethheredia.github.io/CSharpSeleniumQA/)
+
+
+---
+
+## 🥒 BDD with SpecFlow
+
+A separate BDD project using SpecFlow and Gherkin is included in `CSharpSeleniumQA.BDD/`.
+
+Tests are written in plain English:
+
+```gherkin
+Scenario: Successful login with valid credentials
+  Given I am on the login page
+  When I enter valid credentials
+  Then I should see the success message
+```
+
+To run BDD tests:
+```bash
+cd CSharpSeleniumQA.BDD
+dotnet test
+```
