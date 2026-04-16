@@ -25,10 +25,10 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore CSharpSeleniumQA/CSharpSeleniumQA.csproj
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build CSharpSeleniumQA/CSharpSeleniumQA.csproj --no-restore
 
       - name: Install Chrome
         uses: browser-actions/setup-chrome@v1
@@ -38,13 +38,13 @@ jobs:
           Headless: true
           Credentials__ValidUsername: ${{ secrets.VALID_USERNAME }}
           Credentials__ValidPassword: ${{ secrets.VALID_PASSWORD }}
-        run: dotnet test --no-build
+        run: dotnet test CSharpSeleniumQA/CSharpSeleniumQA.csproj --no-build
 
       - name: Generate Allure Report
         if: always()
         run: |
           npm install -g allure-commandline
-          allure generate ./bin/Debug/net9.0/allure-results --clean -o allure-report
+          allure generate CSharpSeleniumQA/bin/Debug/net9.0/allure-results --clean -o allure-report
 
       - name: Upload Pages artifact
         if: always()
@@ -65,3 +65,31 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  bdd-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install dependencies
+        run: dotnet restore CSharpSeleniumQA.BDD/CSharpSeleniumQA.BDD.csproj
+
+      - name: Build
+        run: dotnet build CSharpSeleniumQA.BDD/CSharpSeleniumQA.BDD.csproj --no-restore
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Run BDD tests
+        env:
+          Headless: true
+          Credentials__ValidUsername: ${{ secrets.VALID_USERNAME }}
+          Credentials__ValidPassword: ${{ secrets.VALID_PASSWORD }}
+        run: dotnet test CSharpSeleniumQA.BDD/CSharpSeleniumQA.BDD.csproj --no-build
