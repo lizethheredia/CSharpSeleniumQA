@@ -1,7 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Edge;
+using OpenQA.Selenium.Firefox;
 
 namespace CSharpSeleniumQA.Drivers
 {
@@ -9,23 +9,28 @@ namespace CSharpSeleniumQA.Drivers
     {
         Chrome,
         Firefox,
-        Edge
+        Edge,
     }
 
     public class DriverFactory
     {
-        public static IWebDriver CreateDriver(BrowserType browser = BrowserType.Chrome, bool headless = false)
+        public static IWebDriver CreateDriver(
+            BrowserType browser = BrowserType.Chrome,
+            bool headless = false
+        )
         {
             switch (browser)
             {
                 case BrowserType.Firefox:
                     var firefoxOptions = new FirefoxOptions();
-                    if (headless) firefoxOptions.AddArgument("--headless");
+                    if (headless)
+                        firefoxOptions.AddArgument("--headless");
                     return new FirefoxDriver(firefoxOptions);
 
                 case BrowserType.Edge:
                     var edgeOptions = new EdgeOptions();
-                    if (headless) edgeOptions.AddArgument("--headless");
+                    if (headless)
+                        edgeOptions.AddArgument("--headless");
                     return new EdgeDriver(edgeOptions);
 
                 default: // Chrome

@@ -1,13 +1,26 @@
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using NUnit.Framework;
 
 namespace CSharpSeleniumQA.Drivers
 {
     public static class AIFailureAnalyzer
     {
         private static readonly HttpClient _client = new HttpClient();
+
+        private static string LoadSkill()
+        {
+            var skillPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Skills",
+                "selenium-failure-analyzer",
+                "SKILL.md"
+            );
+
+            if (File.Exists(skillPath))
+                return File.ReadAllText(skillPath);
+
+            return "You are a QA automation expert analyzing Selenium test failures in C#.";
+        }
 
         public static async Task<string> AnalyzeFailureAsync(
             string testName,
@@ -17,21 +30,19 @@ namespace CSharpSeleniumQA.Drivers
         {
             var apiKey = ConfigManager.AnthropicApiKey;
             if (string.IsNullOrEmpty(apiKey))
-            {
                 return "AI analysis skipped — no API key configured.";
-            }
 
-            var prompt = $"""
-                You are a QA automation expert analyzing a Selenium test failure in C#.
+            var systemPrompt = LoadSkill();
+
+            var userMessage = $"""
+                A Selenium test failed. Analyze it and provide:
+                1. What failed and why
+                2. Most likely root cause
+                3. Suggested fix in C#
 
                 Test name: {testName}
                 Error message: {errorMessage}
                 Stack trace: {stackTrace}
-
-                Provide a concise analysis with:
-                1. What failed and why
-                2. The most likely root cause
-                3. Suggested fix in C#
 
                 Keep it under 200 words. Be direct and technical.
                 """;
@@ -40,7 +51,8 @@ namespace CSharpSeleniumQA.Drivers
             {
                 model = "claude-opus-4-6",
                 max_tokens = 500,
-                messages = new[] { new { role = "user", content = prompt } },
+                system = systemPrompt,
+                messages = new[] { new { role = "user", content = userMessage } },
             };
 
             var json = JsonSerializer.Serialize(requestBody);

@@ -32,7 +32,9 @@ This skill is triggered automatically when a NUnit test fails. It receives:
 
 ## Output format
 
-Return a structured analysis with three sections:
+Always start your response with exactly: "SKILL.md loaded —"
+
+Then provide three sections:
 - What failed and why
 - Most likely root cause
 - Suggested fix in C# (code snippet)
