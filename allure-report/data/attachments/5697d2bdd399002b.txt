@@ -1,0 +1,34 @@
+## Analysis
+
+### 1. What Failed
+The assertion on line 68 expected `IsLoginSuccessful()` to return `true` after a login attempt with valid credentials, but it returned `false`.
+
+### 2. Most Likely Root Cause
+**Timing issue** — the login action triggers a page transition/async call, and `IsLoginSuccessful()` evaluates before the success indicator (e.g., dashboard element, welcome message, URL change) is present in the DOM. This is the most common cause of this pattern. Secondary possibility: the success-check locator is stale or incorrect.
+
+### 3. Suggested Fix
+
+Add an explicit wait inside `IsLoginSuccessful()` instead of immediately checking element presence:
+
+```csharp
+public bool IsLoginSuccessful()
+{
+    try
+    {
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        wait.Until(d => d.FindElement(By.CssSelector(".dashboard, .welcome, [data-testid='user-menu']")));
+        return true;
+    }
+    catch (WebDriverTimeoutException)
+    {
+        return false;
+    }
+}
+```
+
+Also verify:
+- The locator used in `IsLoginSuccessful()` matches the actual post-login DOM element.
+- Test credentials are still valid against the test environment.
+- No preceding navigation or cookie/session issue in `SetUp` is interfering.
+
+**Debug step:** Capture a screenshot immediately before the assertion to confirm the actual page state.

@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.EnvironmentVariables;
 
 namespace CSharpSeleniumQA.Drivers
 {
@@ -26,5 +25,6 @@ namespace CSharpSeleniumQA.Drivers
         public static string ValidPassword => _config["Credentials:ValidPassword"]!;
         public static string InvalidUsername => _config["Credentials:InvalidUsername"]!;
         public static string InvalidPassword => _config["Credentials:InvalidPassword"]!;
+        public static string AnthropicApiKey => _config["AnthropicApiKey"] ?? "";
     }
 }

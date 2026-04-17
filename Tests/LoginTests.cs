@@ -42,6 +42,20 @@ namespace CSharpSeleniumQA.Tests
             )
             {
                 ScreenshotHelper.TakeScreenshot(_driver, TestContext.CurrentContext.Test.Name);
+
+                var errorMessage = TestContext.CurrentContext.Result.Message ?? "Unknown error";
+                var stackTrace = TestContext.CurrentContext.Result.StackTrace ?? "No stack trace";
+                var testName = TestContext.CurrentContext.Test.Name;
+
+                var analysis = AIFailureAnalyzer
+                    .AnalyzeFailureAsync(testName, errorMessage, stackTrace)
+                    .Result;
+
+                Allure.Net.Commons.AllureApi.AddAttachment(
+                    "AI Failure Analysis",
+                    "text/plain",
+                    System.Text.Encoding.UTF8.GetBytes(analysis)
+                );
             }
             _driver.Quit();
             _driver.Dispose();
