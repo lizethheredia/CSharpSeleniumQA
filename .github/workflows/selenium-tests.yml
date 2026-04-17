@@ -38,6 +38,7 @@ jobs:
           Headless: true
           Credentials__ValidUsername: ${{ secrets.VALID_USERNAME }}
           Credentials__ValidPassword: ${{ secrets.VALID_PASSWORD }}
+          AnthropicApiKey: ${{ secrets.ANTHROPIC_API_KEY }}
         run: dotnet test CSharpSeleniumQA.csproj --no-build
 
       - name: Generate Allure Report
@@ -92,5 +93,4 @@ jobs:
           Headless: true
           Credentials__ValidUsername: ${{ secrets.VALID_USERNAME }}
           Credentials__ValidPassword: ${{ secrets.VALID_PASSWORD }}
-          AnthropicApiKey: ${{ secrets.ANTHROPIC_API_KEY }}
         run: dotnet test CSharpSeleniumQA.BDD/CSharpSeleniumQA.BDD.csproj --no-build
