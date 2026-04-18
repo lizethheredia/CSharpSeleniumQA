@@ -59,15 +59,14 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const allureUrl = "https://lizethheredia.github.io/CSharpSeleniumQA"\;
-            const date = new Date().toISOString().split('T')[0];
-
+            const runUrl = "https://github.com/" + context.repo.owner + "/" + context.repo.repo + "/actions/runs/" + context.runId;
+            const allureUrl = "https://lizethheredia.github.io/CSharpSeleniumQA";
+            const date = new Date().toISOString().split("T")[0];
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `[TEST FAILURE] CI/CD Pipeline failed - ${date}`,
-              body: `## Test Failed in CI/CD\n\n**Run:** [View run](${runUrl})\n**Allure Report:** [View report](${allureUrl})\n\n## What to do\n1. Check the Allure report for AI Failure Analysis\n2. Review the screenshot attached to the failing test\n3. Apply the suggested C# fix from Claude\n\n> This issue was created automatically by GitHub Actions`,
+              title: "[TEST FAILURE] CI/CD Pipeline failed - " + date,
+              body: "## Test Failed in CI/CD\n\n**Run:** [View run](" + runUrl + ")\n**Allure Report:** [View report](" + allureUrl + ")\n\n## What to do\n1. Check the Allure report for AI Failure Analysis\n2. Review the screenshot\n3. Apply the suggested C# fix from Claude\n\n> Created automatically by GitHub Actions",
             });
 
   deploy:
